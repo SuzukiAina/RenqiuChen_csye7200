@@ -124,7 +124,7 @@ object Movie extends App {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
     val result=ArrayBuffer[String]()
-    for(x <- 0 until  (indices.length-1)){
+    for(x <- 0 to (indices.length-1)){
       result+=list(indices(x))
     }
     result.toList

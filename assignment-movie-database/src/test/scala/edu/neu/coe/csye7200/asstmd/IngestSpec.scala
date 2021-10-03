@@ -23,7 +23,7 @@ class IngestSpec extends AnyFlatSpec with Matchers {
     // check that xys has exactly one element, consisting of Success(42) -- 10 points
     // TO BE IMPLEMENTED
     xys.size match {
-      case 1 =>xys.head shouldBe Success(42)
+      case 1 =>xys(0) shouldBe Success(42)
     }
   }
 
