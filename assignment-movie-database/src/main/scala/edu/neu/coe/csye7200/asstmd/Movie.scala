@@ -1,7 +1,10 @@
 package edu.neu.coe.csye7200.asstmd
 
+import scala.Option
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
-import scala.util.Try
+import scala.language.postfixOps
+import scala.util.{Success, Try}
 
 /**
   * This class represents a Movie from the IMDB data file on Kaggle.
@@ -98,7 +101,8 @@ object Movie extends App {
       * @param w a line of input.
       * @return a Try[Movie]
       */
-    def parse(w: String): Try[Movie] = ??? // TO BE IMPLEMENTED
+    def parse(w: String): Try[Movie] = Try(apply(w.split(",")))
+    // TO BE IMPLEMENTED
   }
 
   val ingester = new Ingest[Movie]()
@@ -119,9 +123,10 @@ object Movie extends App {
   def elements(list: Seq[String], indices: Int*): List[String] = {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
-    val result: Seq[String] =
-    // TO BE IMPLEMENTED
-    ???
+    val result=ArrayBuffer[String]()
+    for(x <- 0 until  (indices.length-1)){
+      result+=list(indices(x))
+    }
     result.toList
   }
 
@@ -191,7 +196,8 @@ object Principal {
 
 object Rating {
   // Hint: This regex matches three patterns: (\w*), (-(\d\d)), (\d\d), for example "PG-13", the first one matches "PG", second one "-13", third one "13".
-  private val rRating = """^(\w*)(-(\d\d))?$""".r
+  private val rRatingpre = """^([a-zA-Z]{1,8})?$""".r
+  private val rRating = """^(\w*)(-)(\d\d)?$""".r
 
   /**
     * Alternative apply method for the Rating class such that a single String is decoded
@@ -201,8 +207,13 @@ object Rating {
     */
   // Hint: This should similar to apply method in Object Name. The parameter of apply in case match should be same as case class Rating
   // 13 points
-  def apply(s: String): Rating = ??? // TO BE IMPLEMENTED
-
+  def apply(s: String): Rating = s match{
+    case rRatingpre(x) => Rating(x,None)
+    case _=>(for (ws <- rRating.unapplySeq(s)) yield for (w <- ws) yield Option(w))match {
+      case Some(Seq(Some(rating),Some(string),Some(age))) => Rating(rating,Some(age).map(f=>f.toInt))
+      case _ => throw ParseException(s"logic error in Rating: $s")
+    }
+  }
 }
 
 case class ParseException(w: String) extends Exception(w)
