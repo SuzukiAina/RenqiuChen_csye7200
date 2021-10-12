@@ -83,7 +83,12 @@ object P05 {
 object P06 {
 
   // inefficient solution
-  def isPalindrome[X](xs: List[X]): Boolean = ??? // TO BE IMPLEMENTED
+  def isPalindrome[X](xs: List[X]): Boolean = {
+    case Nil=>true
+    case _ :: Nil =>true
+    case h::t=>if(h==t.last) isPalindrome(t.init) else false
+//    case h::t=>h==t.last && isPalindrome(t.init)
+  } // TO BE IMPLEMENTED
 }
 
 object P07 {
